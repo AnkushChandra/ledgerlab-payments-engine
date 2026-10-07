@@ -1,0 +1,17 @@
+ledgerlab:
+  jwt:
+    secret: test-only-secret-0123456789abcdef0123456789
+  security:
+    bcrypt-strength: 4
+
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 30
+
+logging:
+  level:
+    com.ledgerlab: INFO
+    org.testcontainers: WARN
+    tc: WARN
+    com.github.dockerjava: WARN
