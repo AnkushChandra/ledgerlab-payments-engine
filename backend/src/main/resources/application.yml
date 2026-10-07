@@ -13,11 +13,11 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        # order_inserts stays off: entities reference each other by id columns rather than JPA
+        # associations, so Hibernate could not sort inserts by foreign-key dependency.
         jdbc:
           time_zone: UTC
           batch_size: 100
-        order_inserts: true
-        order_updates: true
   flyway:
     locations: classpath:db/migration
   jackson:
