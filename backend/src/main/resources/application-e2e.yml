@@ -1,0 +1,12 @@
+# End-to-end test profile: same seed data as dev, used by Playwright in CI.
+spring:
+  flyway:
+    locations: classpath:db/migration,classpath:db/seed
+
+ledgerlab:
+  jwt:
+    secret: ${LEDGERLAB_JWT_SECRET:e2e-only-secret-change-me-0123456789abcdef}
+  security:
+    bcrypt-strength: 4
+  cors:
+    allowed-origins: ${LEDGERLAB_CORS_ORIGINS:http://localhost:4173,http://localhost:5173}

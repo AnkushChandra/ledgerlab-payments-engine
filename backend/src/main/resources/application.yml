@@ -1,0 +1,91 @@
+spring:
+  application:
+    name: ledgerlab
+  datasource:
+    url: ${LEDGERLAB_DB_URL:jdbc:postgresql://localhost:5433/ledgerlab}
+    username: ${LEDGERLAB_DB_USER:ledgerlab}
+    password: ${LEDGERLAB_DB_PASSWORD:ledgerlab}
+    hikari:
+      maximum-pool-size: ${LEDGERLAB_DB_POOL_SIZE:20}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+          batch_size: 100
+        order_inserts: true
+        order_updates: true
+  flyway:
+    locations: classpath:db/migration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: true
+    time-zone: UTC
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 2MB
+  mvc:
+    problemdetails:
+      enabled: false
+  threads:
+    virtual:
+      enabled: false
+
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: ledgerlab
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+  default-produces-media-type: application/json
+
+ledgerlab:
+  jwt:
+    # Must be supplied through LEDGERLAB_JWT_SECRET outside the dev/e2e/test profiles.
+    secret: ${LEDGERLAB_JWT_SECRET:}
+    issuer: ledgerlab
+    ttl: 15m
+  security:
+    bcrypt-strength: 12
+  cors:
+    allowed-origins: ${LEDGERLAB_CORS_ORIGINS:http://localhost:5173}
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN

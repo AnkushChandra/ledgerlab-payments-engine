@@ -1,0 +1,12 @@
+# Local development profile: loads demo seed data and uses a well-known, dev-only JWT secret.
+spring:
+  flyway:
+    locations: classpath:db/migration,classpath:db/seed
+
+ledgerlab:
+  jwt:
+    secret: ${LEDGERLAB_JWT_SECRET:dev-only-secret-change-me-0123456789abcdef}
+  security:
+    bcrypt-strength: 10
+  cors:
+    allowed-origins: ${LEDGERLAB_CORS_ORIGINS:http://localhost:5173,http://localhost:4173}
