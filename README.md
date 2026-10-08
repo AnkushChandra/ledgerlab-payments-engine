@@ -61,6 +61,14 @@ PostgreSQL is published on **localhost:5433** so it does not collide with a loca
 
 A five-minute walkthrough is in [docs/demo-script.md](docs/demo-script.md). Sample settlement files are in [samples/](samples/).
 
+## Screenshots
+
+![Sign-in](docs/screenshots/login.png)
+
+![Overview: balances, ledger integrity, recent payments](docs/screenshots/dashboard.png)
+
+![Payment timeline with authorize, capture and partial refund](docs/screenshots/payment-detail.png)
+
 ## Tests
 
 ```bash

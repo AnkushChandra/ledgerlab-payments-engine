@@ -17,7 +17,7 @@ for i in $(seq 1 60); do
 done
 
 cd "$root/frontend"
-npx vite preview --port 4173 --strictPort --host 127.0.0.1 &
+npm run preview &
 preview_pid=$!
 trap 'kill "$backend_pid" "$preview_pid" 2>/dev/null || true' EXIT
 sleep 2

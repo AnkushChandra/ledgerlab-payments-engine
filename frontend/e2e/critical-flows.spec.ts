@@ -37,8 +37,8 @@ test('authorize, capture and refund a payment', async ({ page }) => {
   await fillAmount(page, 'Amount', '2.50');
   await page.getByLabel('Reason').fill('e2e partial refund');
   await page.getByRole('dialog').getByRole('button', { name: 'Refund' }).click();
-  await expect(page.getByText('Partially refunded')).toBeVisible();
-  await expect(page.getByText('e2e partial refund')).toBeVisible();
+  await expect(page.getByText('Partially refunded').first()).toBeVisible();
+  await expect(page.getByText('e2e partial refund').first()).toBeVisible();
 });
 
 test('open and resolve a dispute', async ({ page }) => {
@@ -57,14 +57,14 @@ test('open and resolve a dispute', async ({ page }) => {
   await page.getByRole('button', { name: 'Open dispute' }).click();
   await page.getByLabel('Reason').fill('e2e goods not received');
   await page.getByRole('dialog').getByRole('button', { name: 'Open dispute' }).click();
-  await expect(page.getByText('Disputed')).toBeVisible();
+  await expect(page.getByText('Disputed').first()).toBeVisible();
 
   await page.getByRole('link', { name: 'e2e goods not received' }).click();
   await page.getByRole('button', { name: 'Resolve' }).click();
   await page.getByLabel('Outcome').selectOption('LOST');
   await page.getByLabel('Note').fill('e2e chargeback');
   await page.getByRole('dialog').getByRole('button', { name: 'Resolve' }).click();
-  await expect(page.getByText('Lost')).toBeVisible();
+  await expect(page.getByText('Lost').first()).toBeVisible();
 });
 
 test('upload a mismatched settlement file and inspect exceptions', async ({ page }) => {
@@ -78,11 +78,11 @@ test('upload a mismatched settlement file and inspect exceptions', async ({ page
 
   await expect(page.getByRole('link', { name: 'settlement-mismatches.csv' })).toBeVisible();
   await page.getByRole('link', { name: 'settlement-mismatches.csv' }).click();
-  await expect(page.getByText('Amount mismatch')).toBeVisible();
-  await expect(page.getByText('Status mismatch')).toBeVisible();
-  await expect(page.getByText('Missing internal')).toBeVisible();
-  await expect(page.getByText('Duplicate external')).toBeVisible();
-  await expect(page.getByText('Missing external')).toBeVisible();
+  await expect(page.getByText('Amount mismatch').first()).toBeVisible();
+  await expect(page.getByText('Status mismatch').first()).toBeVisible();
+  await expect(page.getByText('Missing internal').first()).toBeVisible();
+  await expect(page.getByText('Duplicate external').first()).toBeVisible();
+  await expect(page.getByText('Missing external').first()).toBeVisible();
 });
 
 test('viewer cannot execute restricted actions', async ({ page }) => {

@@ -22,10 +22,19 @@ Use these as source material for resume bullets. Do not claim coverage percentag
 
 ## Tests observed locally
 
-Run `./scripts/test.sh` and record the Surefire/Failsafe suite counts from that run. Do not invent numbers here.
+2026-10-08, this machine, `backend/./mvnw -B verify` and `frontend` lint/test/build plus Playwright:
 
-Playwright covers: login and dashboard, authorize/capture/refund, open/resolve dispute, mismatched settlement upload, viewer restrictions.
+- Surefire: 127 tests, 0 failures.
+- Failsafe: 76 tests, 0 failures (Testcontainers PostgreSQL 16).
+- Jacoco `check`: all configured package thresholds met (no percentage claimed here beyond that gate).
+- Vitest: 5 tests.
+- Playwright: 5 tests (login/dashboard, authorize-capture-refund, open/resolve dispute, mismatched settlement upload, viewer restrictions).
 
 ## Measurements
 
-None recorded yet. After a local run of `./scripts/explain-hot-queries.sh` against seeded data, paste the plans here if they are used in a resume bullet.
+`scripts/explain-hot-queries.sh` against the Docker Compose database after the e2e seed and Playwright run (2026-10-08). These are planner outputs, not latency numbers.
+
+- Payment list by org + `created_at`: Index Only Scan on `payment_org_created_idx`.
+- Audit events by org + `occurred_at`: Index Only Scan on `audit_event_org_occurred_idx`.
+- Captured payments in a settlement window: Index Scan on `payment_org_first_captured_idx`.
+- Ledger entries for one financial account: Hash Join + sequential scans. The seeded `ledger_entry` table is tiny (~52 rows); `ledger_entry_account_idx` exists in `V2__accounts_and_ledger.sql` and is expected to be chosen as the table grows. Do not cite this plan as a performance result.

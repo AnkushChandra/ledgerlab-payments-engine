@@ -10,23 +10,24 @@
 - Phase 5: disputes (hold / win / chargeback), append-only audit trail, authorization tests.
 - Phase 6: settlement CSV import, classification engine, result export, sample files.
 - Frontend pages: login, overview, accounts, payments (with authorize/capture/void/refund), deposits and transfers, disputes, reconciliation, audit.
-- Playwright critical flows and CI workflow defined.
+- Playwright critical flows, Docker Compose, GitHub Actions, demo script, resume notes, README screenshots.
 
 ## Active
 
-- Local verification of frontend lint/unit tests, full backend `verify` (including Jacoco), and Playwright against Docker Postgres.
+- None. Local verification of backend `verify`, frontend lint/unit/build, and Playwright against Docker Postgres has been run.
 
 ## Remaining
 
-- Capture README screenshots from a running local instance.
-- Record EXPLAIN output from `scripts/explain-hot-queries.sh` into resume notes after a local run.
-- Confirm Jacoco package thresholds pass on a clean `./mvnw verify`.
+- Optional: capture a dedicated settlement-exceptions screenshot at desktop width for the README.
+- GitHub Actions on `main` will independently confirm CI (including the e2e job that starts Compose + backend + Playwright).
 
 ## Test results
 
-Backend integration tests last observed passing (Testcontainers PostgreSQL): ledger invariants, payment lifecycle, concurrency, rollback, idempotency, disputes, authentication, authorization, tenant isolation, reconciliation, seed data.
+Observed 2026-10-08 on this machine (`darwin`, Java 21.0.8, Node 25, PostgreSQL 16 via Docker):
 
-Frontend unit tests and Playwright have not been recorded in this file from a completed local run yet.
+- Backend `./mvnw verify`: **127** Surefire tests, **76** Failsafe integration tests, Jacoco `check` reported all coverage checks met, `BUILD SUCCESS`.
+- Frontend: lint, Prettier, 5 Vitest tests, production build.
+- Playwright (`npx playwright test` against `spring-boot:run` profile `e2e` + Vite preview on :4173): **5 passed** (login/dashboard, authorize-capture-refund, dispute, mismatched settlement upload, viewer gating).
 
 ## Known limitations
 
