@@ -21,6 +21,10 @@
 - Optional: capture a dedicated settlement-exceptions screenshot at desktop width for the README.
 - GitHub Actions on `main` will independently confirm CI (including the e2e job that starts Compose + backend + Playwright).
 
+## Measurement (2026-10-09)
+
+`python3 scripts/measure-capture-contention.py` against the local API: 32 concurrent full captures of a $10.00 authorization → 1 committed, 31 rejected (`409 INVALID_PAYMENT_STATE`), captured amount $10.00, over-capture $0.00. Integrity read on that response: 0 unbalanced journals, 0 balance-drift accounts, accounting equation held.
+
 ## Test results
 
 Observed 2026-10-08 on this machine (`darwin`, Java 21.0.8, Node 25, PostgreSQL 16 via Docker):

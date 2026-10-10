@@ -80,6 +80,25 @@ Backend tests start disposable PostgreSQL via Testcontainers. They do not need `
 
 Acceptance coverage includes: balanced journals, immutable entries, idempotent retries and conflicts, concurrent capture/refund, rollback after injected failure, tenant isolation, viewer restrictions, reconciliation classifications, Flyway from an empty database.
 
+## Measured
+
+One number, produced by a script in this repo. Not a latency or throughput claim.
+
+On **2026-10-09**, `python3 scripts/measure-capture-contention.py` called the local API and fired **32 concurrent full captures** of a single **$10.00** authorization (distinct idempotency keys):
+
+| Result | Observed |
+|---|---|
+| Captures that committed | 1 (`201`) |
+| Captures rejected | 31 (`409 INVALID_PAYMENT_STATE`) |
+| Amount captured | $10.00 |
+| Over-capture | $0.00 |
+| Unbalanced journals | 0 |
+| Accounts whose cached balance disagreed with their entries | 0 |
+
+The payment row is locked with `SELECT … FOR UPDATE` before the capture is applied, so the other 31 requests observe an already-captured payment. Re-run the script against a `dev` or `e2e` API to reproduce it.
+
+Other counts from `./mvnw verify` on 2026-10-08 (same machine): **127** unit tests and **76** Testcontainers integration tests, plus **5** Playwright flows. Domain packages are gated at 80% line and 70% branch coverage; the Jacoco check passed. No coverage percentage beyond that gate is claimed.
+
 ## Design decisions
 
 Documented in [docs/architecture.md](docs/architecture.md). Short version:

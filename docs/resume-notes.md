@@ -30,7 +30,32 @@ Use these as source material for resume bullets. Do not claim coverage percentag
 - Vitest: 5 tests.
 - Playwright: 5 tests (login/dashboard, authorize-capture-refund, open/resolve dispute, mismatched settlement upload, viewer restrictions).
 
+## Suggested resume bullets
+
+Copy only if the measurement date still matches a run you can reproduce.
+
+- Built a double-entry payments ledger (Java 21, Spring Boot 3.5, PostgreSQL 16) where capture takes `SELECT … FOR UPDATE` on the payment row. A scripted probe of 32 concurrent full captures of one $10.00 authorization committed exactly once (31 rejected with 409); captured amount stayed $10.00.
+- Kept journals balanced in application code and again with a deferred PostgreSQL constraint trigger. The same probe's integrity read reported 0 unbalanced journals and 0 accounts whose cached balance disagreed with the sum of entries.
+- 203 backend tests (127 unit, 76 Testcontainers integration tests) covering idempotent replay vs conflict, concurrent capture and refund, rollback, tenant isolation, and settlement classifications, plus 5 Playwright flows against the real API.
+
 ## Measurements
+
+`scripts/measure-capture-contention.py` against `http://localhost:8080` on 2026-10-09 (macOS arm64, API already running on the dev/e2e Postgres):
+
+```json
+{
+  "attempts": 32,
+  "authorizedMinor": 1000,
+  "successes": 1,
+  "rejected": 31,
+  "outcomes": ["201:ok", "409:INVALID_PAYMENT_STATE"],
+  "capturedMinor": 1000,
+  "overCaptureMinor": 0,
+  "unbalancedJournals": 0,
+  "accountsWithBalanceDrift": 0,
+  "accountingEquationHolds": true
+}
+```
 
 `scripts/explain-hot-queries.sh` against the Docker Compose database after the e2e seed and Playwright run (2026-10-08). These are planner outputs, not latency numbers.
 
